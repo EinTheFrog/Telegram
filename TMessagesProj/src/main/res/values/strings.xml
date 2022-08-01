@@ -2897,6 +2897,7 @@
     <string name="PaintMarker">Marker</string>
     <string name="PaintNeon">Neon</string>
     <string name="PaintArrow">Arrow</string>
+    <string name="PaintBrush">Brush</string>
     <string name="PaintDuplicate">Duplicate</string>
     <string name="PaintOutlined">Outlined</string>
     <string name="PaintRegular">Regular</string>
