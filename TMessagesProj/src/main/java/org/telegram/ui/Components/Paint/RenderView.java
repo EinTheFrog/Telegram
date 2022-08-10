@@ -1,6 +1,7 @@
 package org.telegram.ui.Components.Paint;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.*;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
@@ -114,7 +115,9 @@ public class RenderView extends TextureView {
             }
         });
 
-        input = new Input(this);
+        int screenSize = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        input = new Input(this, screenSize);
+
         painting.setDelegate(new Painting.PaintingDelegate() {
             @Override
             public void contentChanged() {

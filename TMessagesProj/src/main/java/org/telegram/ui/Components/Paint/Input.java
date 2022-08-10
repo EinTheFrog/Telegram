@@ -1,15 +1,21 @@
 package org.telegram.ui.Components.Paint;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Matrix;
 import android.view.MotionEvent;
+
+import com.google.android.exoplayer2.util.Log;
 
 import org.telegram.messenger.AndroidUtilities;
 
 import java.util.Vector;
 
 public class Input {
+    private static final float NORMAL_TOUCH_SIZE = 0.1f; // handpicked value
 
     private RenderView renderView;
+    private int screenSizeCategory;
 
     private boolean beganDrawing;
     private boolean isFirst;
@@ -19,6 +25,7 @@ public class Input {
     private Point lastLocation;
     private double lastRemainder;
     private float lastAngle;
+    private float lastTouchIntensity;
 
     private Point[] points = new Point[3];
     private int pointsCount;
@@ -26,8 +33,9 @@ public class Input {
     private Matrix invertMatrix;
     private float[] tempPoint = new float[2];
 
-    public Input(RenderView render) {
+    public Input(RenderView render, int screenSize) {
         renderView = render;
+        screenSizeCategory = screenSize;
     }
 
     public void setMatrix(Matrix m) {
@@ -39,6 +47,7 @@ public class Input {
         int action = event.getActionMasked();
         float x = event.getX();
         float y = renderView.getHeight() - event.getY();
+        lastTouchIntensity = touchIntensityForTouchSize(event.getSize());
 
         tempPoint[0] = x;
         tempPoint[1] = y;
@@ -129,6 +138,34 @@ public class Input {
         }
     }
 
+    private float touchIntensityForTouchSize(float touchSize) {
+        float newTouchIntensity = calculateTouchIntensity(touchSize);
+        return smoothenTouchIntensityChange(newTouchIntensity);
+    }
+
+    private float calculateTouchIntensity(float touchSize) {
+        float screenIndependentTouchSize = calculateScreenIndependentTouchSize(touchSize);
+        // formula for calculating touch intensity for touch size is handpicked
+        float newTouchIntensity = (float) Math.exp(screenIndependentTouchSize / NORMAL_TOUCH_SIZE) - 1.5f;
+        float maxTouchIntensity = 1.0f;
+        float minTouchIntensity = 0.1f;
+        newTouchIntensity = Math.min(maxTouchIntensity, newTouchIntensity);
+        newTouchIntensity = Math.max(minTouchIntensity, newTouchIntensity);
+        return newTouchIntensity;
+    }
+
+    private float calculateScreenIndependentTouchSize(float touchSize) {
+        return touchSize * screenSizeCategory;
+    }
+
+    private float smoothenTouchIntensityChange(float newTouchIntensity) {
+        float change = newTouchIntensity - lastTouchIntensity;
+        float maxChange = 0.01f;
+        float clampedChange = Math.min(maxChange, change);
+        clampedChange = Math.max(-maxChange, clampedChange);
+        return lastTouchIntensity + clampedChange;
+    }
+
     private void reset() {
         pointsCount = 0;
     }
@@ -200,7 +237,10 @@ public class Input {
     }
 
     private void paintPath(final Path path) {
-        path.setup(renderView.getCurrentColor(), renderView.getCurrentWeight(), renderView.getCurrentBrush());
+        int currentColor = renderView.getCurrentColor();
+        float currentWeight = renderView.getCurrentWeight() * lastTouchIntensity;
+        Brush currentBrush = renderView.getCurrentBrush();
+        path.setup(currentColor, currentWeight, currentBrush);
 
         if (clearBuffer) {
             lastRemainder = 0.0f;

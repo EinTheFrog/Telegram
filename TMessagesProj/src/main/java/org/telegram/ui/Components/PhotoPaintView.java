@@ -393,7 +393,24 @@ public class PhotoPaintView extends FrameLayout implements EntityView.EntityView
         float x = (float) (x2 * Math.cos(rotation) - y2 * Math.sin(rotation)) + renderView.getMeasuredWidth() / 2;
         float y = (float) (x2 * Math.sin(rotation) + y2 * Math.cos(rotation)) + renderView.getMeasuredHeight() / 2;
 
-        MotionEvent event = MotionEvent.obtain(0, 0, ev.getActionMasked(), x, y, 0);
+        int defaultPrecision = 1;
+        int defaultMetaState = 0;
+        int defaultDeviceId = 0;
+        int defaultEdgeFlags = 0;
+        MotionEvent event = MotionEvent.obtain(
+                0,
+                0,
+                ev.getActionMasked(),
+                x,
+                y,
+                ev.getPressure(),
+                ev.getSize(),
+                defaultMetaState,
+                defaultPrecision,
+                defaultPrecision,
+                defaultDeviceId,
+                defaultEdgeFlags
+        );
         renderView.onTouch(event);
         event.recycle();
         return true;
