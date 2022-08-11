@@ -77,7 +77,7 @@ public class PhotoPaintView extends FrameLayout implements EntityView.EntityView
             new Brush.Elliptical(),
             new Brush.Neon(),
             new Brush.Arrow(),
-            new Brush.Radial()
+            new Brush.RadialTouchSensible()
     };
 
     private FrameLayout toolsView;
@@ -1411,7 +1411,7 @@ public class PhotoPaintView extends FrameLayout implements EntityView.EntityView
             View arrow = buttonForBrush(3, R.drawable.msg_draw_arrow, LocaleController.getString("PaintArrow", R.string.PaintArrow), currentBrush == 3);
             popupLayout.addView(arrow, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 54));
 
-            View dynamic = buttonForBrush(4, R.drawable.msg_photo_draw, LocaleController.getString("PaintBrush", R.string.PaintBrush), currentBrush == 4);
+            View dynamic = buttonForBrush(4, R.drawable.msg_draw_brush, LocaleController.getString("PaintBrush", R.string.PaintBrush), currentBrush == 4);
             popupLayout.addView(dynamic, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 54));
 
         }, this, Gravity.RIGHT | Gravity.BOTTOM, 0, AndroidUtilities.dp(48));

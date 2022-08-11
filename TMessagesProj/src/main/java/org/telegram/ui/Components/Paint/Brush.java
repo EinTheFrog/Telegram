@@ -13,6 +13,7 @@ public interface Brush {
     float getAngle();
     float getScale();
     boolean isLightSaber();
+    boolean isTouchSensible();
     Bitmap getStamp();
 
     class Radial implements Brush {
@@ -39,6 +40,11 @@ public interface Brush {
 
         @Override
         public boolean isLightSaber() {
+            return false;
+        }
+
+        @Override
+        public boolean isTouchSensible() {
             return false;
         }
 
@@ -78,6 +84,11 @@ public interface Brush {
         }
 
         @Override
+        public boolean isTouchSensible() {
+            return false;
+        }
+
+        @Override
         public Bitmap getStamp() {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;
@@ -113,6 +124,11 @@ public interface Brush {
         }
 
         @Override
+        public boolean isTouchSensible() {
+            return false;
+        }
+
+        @Override
         public Bitmap getStamp() {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;
@@ -145,6 +161,51 @@ public interface Brush {
         @Override
         public boolean isLightSaber() {
             return false;
+        }
+
+        @Override
+        public boolean isTouchSensible() {
+            return false;
+        }
+
+        @Override
+        public Bitmap getStamp() {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inScaled = false;
+            return BitmapFactory.decodeResource(ApplicationLoader.applicationContext.getResources(), R.drawable.paint_radial_brush, options);
+        }
+    }
+
+    class RadialTouchSensible implements Brush {
+
+        @Override
+        public float getSpacing() {
+            return 0.15f;
+        }
+
+        @Override
+        public float getAlpha() {
+            return 0.85f;
+        }
+
+        @Override
+        public float getAngle() {
+            return 0.0f;
+        }
+
+        @Override
+        public float getScale() {
+            return 1.0f;
+        }
+
+        @Override
+        public boolean isLightSaber() {
+            return false;
+        }
+
+        @Override
+        public boolean isTouchSensible() {
+            return true;
         }
 
         @Override

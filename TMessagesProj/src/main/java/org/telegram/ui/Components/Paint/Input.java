@@ -238,8 +238,11 @@ public class Input {
 
     private void paintPath(final Path path) {
         int currentColor = renderView.getCurrentColor();
-        float currentWeight = renderView.getCurrentWeight() * lastTouchIntensity;
         Brush currentBrush = renderView.getCurrentBrush();
+        float currentWeight = renderView.getCurrentWeight();
+        if (currentBrush.isTouchSensible()) {
+            currentWeight = renderView.getCurrentWeight() * lastTouchIntensity;
+        }
         path.setup(currentColor, currentWeight, currentBrush);
 
         if (clearBuffer) {
