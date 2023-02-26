@@ -115,6 +115,7 @@ public class VoIPFragment implements VoIPService.StateListener, NotificationCent
     private ViewGroup fragmentView;
     private VoIPOverlayBackground overlayBackground;
 
+    private BackupImageView callingUserPhotoViewBackground;
     private BackupImageView callingUserPhotoView;
     private BackupImageView callingUserPhotoViewMini;
 
@@ -673,6 +674,16 @@ public class VoIPFragment implements VoIPService.StateListener, NotificationCent
         updateSystemBarColors();
         fragmentView = frameLayout;
         frameLayout.setFitsSystemWindows(true);
+        callingUserPhotoViewBackground = new BackupImageView(context) {
+
+            int blackoutColor = ColorUtils.setAlphaComponent(Color.RED, (int) (255 * 0.3f));
+
+            @Override
+            protected void onDraw(Canvas canvas) {
+                super.onDraw(canvas);
+                canvas.drawColor(blackoutColor);
+            }
+        };
         callingUserPhotoView = new BackupImageView(context) {
 
             int blackoutColor = ColorUtils.setAlphaComponent(Color.BLACK, (int) (255 * 0.3f));
@@ -683,6 +694,8 @@ public class VoIPFragment implements VoIPService.StateListener, NotificationCent
                 canvas.drawColor(blackoutColor);
             }
         };
+        callingUserPhotoView.setSize(320, 320);
+        callingUserPhotoView.setRoundRadius(160);
         callingUserTextureView = new VoIPTextureView(context, false, true, false, false);
         callingUserTextureView.renderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
         callingUserTextureView.renderer.setEnableHardwareScaler(true);
@@ -690,6 +703,7 @@ public class VoIPFragment implements VoIPService.StateListener, NotificationCent
         callingUserTextureView.scaleType = VoIPTextureView.SCALE_TYPE_FIT;
         //     callingUserTextureView.attachBackgroundRenderer();
 
+        frameLayout.addView(callingUserPhotoViewBackground);
         frameLayout.addView(callingUserPhotoView);
         frameLayout.addView(callingUserTextureView);
 
